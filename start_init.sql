@@ -308,3 +308,9 @@ ALTER TABLE core.amenity
 ADD COLUMN employee_type_id INT REFERENCES core.employee_type(id)
     ON DELETE SET NULL
     ON UPDATE CASCADE;
+
+-- добавил связь сотрудников с конкретной гостиницей
+ALTER TABLE core.employee
+ADD COLUMN hotel_id INT REFERENCES core.hotel(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
