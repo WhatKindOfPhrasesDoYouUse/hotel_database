@@ -1,9 +1,12 @@
-CREATE DATABASE hotel_db;
+-- Active: 1742117862138@@127.0.0.1@5432
+CREATE DATABASE hotel_database;
 CREATE SCHEMA IF NOT EXISTS core;
+
+SET search_path = 'core';
 
 -- домен исключающий все символы кроме буквенны, для имен длинной 50 символов
 CREATE DOMAIN NAME AS VARCHAR(50)
-    CHECK (VALUES ~ '^[A-Za-zА-Яа-я\-]+$');
+    CHECK (VALUE ~ '^[A-Za-zА-Яа-я\-]+$');
 
 -- домен для стандартного вида email, длинной 100 символов
 CREATE DOMAIN EMAIL AS VARCHAR(100)
@@ -50,7 +53,7 @@ CREATE TABLE core.work_schedule (
 CREATE TABLE core.employee (
     id SERIAL PRIMARY KEY,  
     hire_date DATE NOT NULL, 
-    base_salary DECIMAL(10, 2) NOT NULL,  -
+    base_salary DECIMAL(10, 2) NOT NULL,
     employee_type_id INT NOT NULL REFERENCES core.employee_type(id)
         ON DELETE RESTRICT  -- запретить удаление типа сотрудника, если есть сотрудники этого типа
         ON UPDATE CASCADE,  -- обновить employee_type_id, если изменится id в таблице employee_type
@@ -73,15 +76,15 @@ CREATE TABLE core.card (
     id SERIAL PRIMARY KEY,
     card_number CARD_NUMBER NOT NULL UNIQUE,
     card_date CARD_DATE NOT NULL,
-    bank_id INT NOT NULL FOREIGN KEY (bank_id) REFERENCES core.bank(id)
-        ON DELETE CASCADE,
+    bank_id INT NOT NULL REFERENCES core.bank(id)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 -- таблица гостей
 CREATE TABLE core.guest (
     id SERIAL PRIMARY KEY,
-    city_​of_residence NAME NOT NULL,
+    city_of_residence NAME NOT NULL,
     date_of_birth DATE 
         CHECK (date_of_birth <= CURRENT_DATE) NOT NULL ,
     passport_series_hash VARCHAR(150) NOT NULL,
@@ -107,13 +110,13 @@ CREATE TABLE core.hotel (
     id SERIAL PRIMARY KEY,
     name NAME NOT NULL UNIQUE,
     city NAME NOT NULL,
-    address NOT NULL,
+    address VARCHAR(100) NOT NULL,
     description TEXT,
     phone_number PHONE_NUMBER NOT NULL UNIQUE,
     email EMAIL NOT NULL UNIQUE,
     year_of_construction INT 
-        CHECK (year_of_construction >= 1300 AND year_of_construction <= CURRENT_DATE),
-    rating INT NOT NULL DEFAULT 0
+        CHECK (year_of_construction >= 1300 AND year_of_construction <= EXTRACT(YEAR FROM CURRENT_DATE)),
+    rating FLOAT NOT NULL DEFAULT 1
         CHECK (rating >= 1 AND rating <= 5)
 );
 
@@ -127,7 +130,7 @@ CREATE TABLE core.room (
     unit_price INT NOT NULL
         CHECK (unit_price >= 0),
     hotel_id INT NOT NULL REFERENCES core.hotel(id)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -155,8 +158,8 @@ CREATE TABLE core.amenity (
     description TEXT,
     unit_price INT NOT NULL,
     room_id INT NOT NULL REFERENCES core.room(id)
-        ON DELETE NULL
-        ON UPDATE NULL
+        ON DELETE SET NULL
+        ON UPDATE SET NULL
 );
 
 -- таблица бронирования дополнительных услуг
@@ -164,14 +167,14 @@ CREATE TABLE core.amenity_booking (
     id SERIAL PRIMARY KEY,
     order_date DATE NOT NULL CHECK (order_date <= CURRENT_DATE),
     order_time TIME NOT NULL,
-    ready_date DATA NOT NULL,
+    ready_date DATE NOT NULL,
     ready_time TIME NOT NULL,
     completion_status VARCHAR(30) NOT NULL DEFAULT ('В ожидании подтверждения'),
     qunatity INT NOT NULL CHECK (qunatity > 0),
     amenity_id INT NOT NULL REFERENCES core.amenity(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
-    quest_id INT NOT NULL REFERENCES core.quest(id)
+    quest_id INT NOT NULL REFERENCES core.guest(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -190,8 +193,8 @@ CREATE TABLE core.amenity_payment (
     total_cost INT NOT NULL CHECK (total_cost >= 0),
     payment_status VARCHAR(30) DEFAULT NULL,
     payment_type_id INT NOT NULL REFERENCES core.payment_type(id)
-        ON DELETE RESTRICT,
-        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
     amenity_booking_id INT NOT NULL REFERENCES core.amenity_booking(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
@@ -204,11 +207,11 @@ CREATE TABLE core.room_booking (
     check_out_date DATE NOT NULL,
     check_in_time TIME NOT NULL,
     check_out_time TIME NOT NULL,
-    quest_id INT NOT NULL REFERENCES core.quest(id)
-        ON DELETE CASCADE,
-        ON UPDATE CASCADE
+    quest_id INT NOT NULL REFERENCES core.guest(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
     room_id INT NOT NULL REFERENCES core.room(id)
-        ON DELETE RESTRICT,
+        ON DELETE RESTRICT
         ON UPDATE CASCADE,
     CHECK(check_in_date <= check_out_date)
 );
@@ -220,11 +223,11 @@ CREATE TABLE core.room_payment (
     payment_time TIME NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL CHECK (total_amount >= 0),
     payment_status VARCHAR(50) NOT NULL,
-    payment_type_id INT NOT NULL REFERENCES core.payment_method(id)
+    payment_type_id INT NOT NULL REFERENCES core.payment_type(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
     room_booking_id INT NOT NULL REFERENCES core.room_booking(id)
-        ON DELETE RESTRICT,
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 
