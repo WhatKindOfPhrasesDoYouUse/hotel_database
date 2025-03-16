@@ -302,3 +302,9 @@ ALTER TABLE core.amenity_booking
 ADD COLUMN employee_id INT REFERENCES core.employee(id)
     ON DELETE SET NULL
     ON UPDATE CASCADE;
+
+-- добавил жесткую связь между услугой и типом сотрудника
+ALTER TABLE core.amenity
+ADD COLUMN employee_type_id INT REFERENCES core.employee_type(id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
