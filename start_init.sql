@@ -1,5 +1,8 @@
 -- Active: 1742117862138@@127.0.0.1@5432
 CREATE DATABASE hotel_database;
+
+\c hotel_database
+
 CREATE SCHEMA IF NOT EXISTS core;
 
 SET search_path = 'core';
@@ -159,7 +162,7 @@ CREATE TABLE core.amenity (
     unit_price INT NOT NULL,
     room_id INT NOT NULL REFERENCES core.room(id)
         ON DELETE SET NULL
-        ON UPDATE SET NULL
+        ON UPDATE CASCADE
 );
 
 -- таблица бронирования дополнительных услуг
@@ -170,11 +173,11 @@ CREATE TABLE core.amenity_booking (
     ready_date DATE NOT NULL,
     ready_time TIME NOT NULL,
     completion_status VARCHAR(30) NOT NULL DEFAULT ('В ожидании подтверждения'),
-    qunatity INT NOT NULL CHECK (qunatity > 0),
+    quantity INT NOT NULL CHECK (quantity > 0),
     amenity_id INT NOT NULL REFERENCES core.amenity(id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE,
-    quest_id INT NOT NULL REFERENCES core.guest(id)
+    guest_id INT NOT NULL REFERENCES core.guest(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
