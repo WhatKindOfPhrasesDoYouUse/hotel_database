@@ -292,3 +292,13 @@ CREATE TABLE core.amenity_review (
         ON DELETE CASCADE 
         ON UPDATE CASCADE 
 );
+
+-- исправление статуса
+ALTER TABLE core.amenity_booking
+ALTER COLUMN completion_status SET DEFAULT 'Ожидается подтверждение';
+
+-- добавил персонал в таблицу бронирования дополнительных услуг
+ALTER TABLE core.amenity_booking 
+ADD COLUMN employee_id INT REFERENCES core.employee(id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
