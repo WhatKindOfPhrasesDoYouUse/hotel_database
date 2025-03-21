@@ -28,9 +28,7 @@
     20. amenity_review – отзывы на дополнительные услуги от гостей.
 */
 
-CREATE DATABASE hotel_database;
-
-\c hotel_database
+-- CREATE DATABASE hotel_database;
 
 CREATE SCHEMA IF NOT EXISTS core;
 
@@ -212,7 +210,7 @@ CREATE TABLE core.amenity_booking (
 );
 
 -- справочник типов оплаты
-CREATE TABLE payment_type (
+CREATE TABLE core.payment_type (
     id SERIAL PRIMARY KEY,
     name NAME NOT NULL UNIQUE
 );
