@@ -401,3 +401,12 @@ VALUES
   1990, 
   4.0,
   2);
+
+ALTER TABLE guest
+    DROP CONSTRAINT guest_client_id_fkey;
+
+ALTER TABLE guest
+    ADD CONSTRAINT unique_client_id UNIQUE (client_id);
+
+ALTER TABLE guest
+    ADD CONSTRAINT guest_client_id_fkey FOREIGN KEY (client_id) REFERENCES client(id) ON DELETE CASCADE ON UPDATE CASCADE;
