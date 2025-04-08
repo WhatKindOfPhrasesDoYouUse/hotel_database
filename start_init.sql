@@ -503,3 +503,5 @@ INSERT INTO room_comfort (room_id, comfort_id) VALUES
 (8, 18), -- Полотенца
 (8, 19), -- Мини-бар
 (8, 20); -- Кухонный уголок
+
+ALTER TABLE room_booking RENAME COLUMN quest_id TO guest_id;
