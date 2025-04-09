@@ -505,3 +505,14 @@ INSERT INTO room_comfort (room_id, comfort_id) VALUES
 (8, 20); -- Кухонный уголок
 
 ALTER TABLE room_booking RENAME COLUMN quest_id TO guest_id;
+
+-- изменение связи между картой и гостем
+ALTER TABLE core.guest
+DROP CONSTRAINT IF EXISTS guest_card_id_fkey;
+
+ALTER TABLE core.guest
+DROP COLUMN IF EXISTS card_id;
+
+ALTER TABLE core.card
+ADD COLUMN guest_id INT UNIQUE REFERENCES core.guest(id)
+ON DELETE CASCADE;
