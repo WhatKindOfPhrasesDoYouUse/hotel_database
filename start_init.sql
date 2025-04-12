@@ -516,3 +516,6 @@ DROP COLUMN IF EXISTS card_id;
 ALTER TABLE core.card
 ADD COLUMN guest_id INT UNIQUE REFERENCES core.guest(id)
 ON DELETE CASCADE;
+
+ALTER TABLE core.room_booking
+ADD COLUMN number_of_guests INTEGER NOT NULL DEFAULT 1;
