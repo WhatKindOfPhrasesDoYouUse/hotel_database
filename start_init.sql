@@ -573,3 +573,27 @@ INSERT INTO amenity (name, description, unit_price, room_id, employee_type_id) V
     ('Телевизор', 'Стандартные каналы', 0, 9, 3),
     ('Будильник', 'По звонку', 0, 9, 1),
     ('Прачечная', 'Оплата за услугу', 200, 9, 2);
+
+ALTER TABLE core.employee DROP COLUMN base_salary;
+ALTER TABLE core.employee DROP COLUMN hire_date;
+ALTER TABLE core.employee DROP COLUMN work_schedule_id;
+
+INSERT INTO client (name, surname, patronymic, email, phone_number, password_hash) VALUES
+    ('Анна', 'Иванова', 'Петровна', 'anna.ivanova@example.com', '+79270000001', 'hash1'),
+    ('Игорь', 'Сидоров', 'Александрович', 'igor.sidorov@example.com', '+79270000002', 'hash2'),
+    ('Елена', 'Кузнецова', 'Игоревна', 'elena.kuz@example.com', '+79270000003', 'hash3'),
+    ('Максим', 'Смирнов', 'Дмитриевич', 'max.smirnov@example.com', '+79270000004', 'hash4'),
+    ('Татьяна', 'Морозова', 'Сергеевна', 'tatiana.m@example.com', '+79270000005', 'hash5'),
+    ('Олег', 'Васильев', 'Николаевич', 'oleg.vas@example.com', '+79270000006', 'hash6'),
+    ('Светлана', 'Федорова', 'Евгеньевна', 'sveta.f@example.com', '+79270000007', 'hash7'),
+    ('Алексей', 'Попов', 'Владимирович', 'alex.popov@example.com', '+79270000008', 'hash8');
+
+INSERT INTO employee (employee_type_id, client_id, hotel_id) VALUES
+    (1, 26, 1),  -- Анна Иванова – Администратор
+    (1, 27, 1),  -- Игорь Сидоров – Администратор
+    (2, 28, 1),  -- Елена Кузнецова – Уборщик
+    (2, 29, 1),  -- Максим Смирнов – Уборщик
+    (3, 30, 1),  -- Татьяна Морозова – Техник
+    (3, 31, 1),  -- Олег Васильев – Техник
+    (4, 32, 1),  -- Светлана Федорова – Ресепшен
+    (4, 33, 1);  -- Алексей Попов – Ресепшен
