@@ -597,3 +597,9 @@ INSERT INTO employee (employee_type_id, client_id, hotel_id) VALUES
     (3, 31, 1),  -- Олег Васильев – Техник
     (4, 32, 1),  -- Светлана Федорова – Ресепшен
     (4, 33, 1);  -- Алексей Попов – Ресепшен
+
+ALTER TABLE core.amenity_booking
+ALTER COLUMN ready_date DROP NOT NULL;
+
+ALTER TABLE core.amenity_booking
+ALTER COLUMN ready_time DROP NOT NULL;
