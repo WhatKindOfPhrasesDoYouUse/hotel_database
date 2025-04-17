@@ -603,3 +603,20 @@ ALTER COLUMN ready_date DROP NOT NULL;
 
 ALTER TABLE core.amenity_booking
 ALTER COLUMN ready_time DROP NOT NULL;
+
+-- таблица для хранения информации о дополнительных гостях комнаты
+CREATE TABLE core.additional_guest (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
+    patronymic VARCHAR(50),
+    passport_series_hash VARCHAR(150) NOT NULL,
+    passport_number_hash VARCHAR(150) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    room_booking_id INT NOT NULL REFERENCES core.room_booking(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    guest_id INT REFERENCES core.guest (id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
