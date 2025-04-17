@@ -620,3 +620,8 @@ CREATE TABLE core.additional_guest (
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
+
+-- поля для подтверждения бронирования
+ALTER TABLE core.room_booking
+ADD COLUMN is_confirmed BOOLEAN DEFAULT FALSE,
+ADD COLUMN confirmation_time TIMESTAMP DEFAULT NULL;
