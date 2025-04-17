@@ -625,3 +625,6 @@ CREATE TABLE core.additional_guest (
 ALTER TABLE core.room_booking
 ADD COLUMN is_confirmed BOOLEAN DEFAULT FALSE,
 ADD COLUMN confirmation_time TIMESTAMP DEFAULT NULL;
+
+ALTER TABLE core.room_booking
+ADD COLUMN created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;

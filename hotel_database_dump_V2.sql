@@ -81,6 +81,47 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: additional_guest; Type: TABLE; Schema: core; Owner: postgres
+--
+
+CREATE TABLE core.additional_guest (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL,
+    surname character varying(50) NOT NULL,
+    patronymic character varying(50),
+    passport_series_hash character varying(150) NOT NULL,
+    passport_number_hash character varying(150) NOT NULL,
+    date_of_birth date NOT NULL,
+    room_booking_id integer NOT NULL,
+    guest_id integer
+);
+
+
+ALTER TABLE core.additional_guest OWNER TO postgres;
+
+--
+-- Name: additional_guest_id_seq; Type: SEQUENCE; Schema: core; Owner: postgres
+--
+
+CREATE SEQUENCE core.additional_guest_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE core.additional_guest_id_seq OWNER TO postgres;
+
+--
+-- Name: additional_guest_id_seq; Type: SEQUENCE OWNED BY; Schema: core; Owner: postgres
+--
+
+ALTER SEQUENCE core.additional_guest_id_seq OWNED BY core.additional_guest.id;
+
+
+--
 -- Name: amenity; Type: TABLE; Schema: core; Owner: postgres
 --
 
@@ -680,6 +721,9 @@ CREATE TABLE core.room_booking (
     guest_id integer NOT NULL,
     room_id integer NOT NULL,
     number_of_guests integer DEFAULT 1 NOT NULL,
+    is_confirmed boolean DEFAULT false,
+    confirmation_time timestamp without time zone,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT room_booking_check CHECK ((check_in_date <= check_out_date))
 );
 
@@ -831,6 +875,13 @@ CREATE TABLE public."__EFMigrationsHistory" (
 ALTER TABLE public."__EFMigrationsHistory" OWNER TO postgres;
 
 --
+-- Name: additional_guest id; Type: DEFAULT; Schema: core; Owner: postgres
+--
+
+ALTER TABLE ONLY core.additional_guest ALTER COLUMN id SET DEFAULT nextval('core.additional_guest_id_seq'::regclass);
+
+
+--
 -- Name: amenity id; Type: DEFAULT; Schema: core; Owner: postgres
 --
 
@@ -964,6 +1015,14 @@ ALTER TABLE ONLY core.work_schedule ALTER COLUMN id SET DEFAULT nextval('core.wo
 
 
 --
+-- Data for Name: additional_guest; Type: TABLE DATA; Schema: core; Owner: postgres
+--
+
+COPY core.additional_guest (id, name, surname, patronymic, passport_series_hash, passport_number_hash, date_of_birth, room_booking_id, guest_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: amenity; Type: TABLE DATA; Schema: core; Owner: postgres
 --
 
@@ -1078,7 +1137,7 @@ COPY core.bank (id, name) FROM stdin;
 --
 
 COPY core.card (id, card_number, card_date, bank_id, guest_id) FROM stdin;
-78	1234567812345678	01/12	16	13
+78	1234567812341678	01/12	21	13
 \.
 
 
@@ -1087,7 +1146,6 @@ COPY core.card (id, card_number, card_date, bank_id, guest_id) FROM stdin;
 --
 
 COPY core.client (id, name, surname, patronymic, email, phone_number, password_hash) FROM stdin;
-20	Дмитрий	Ошуев	Владимирович	mazafon64@gmail.com	+79229314150	AQAAAAIAAYagAAAAEDD+Yd4XqbvPjk3eXnjP/gQPSoaCZjYiaYY4oesd/a0v7+Qu2XdZ4jt6SSe5w2JKlg==
 26	Анна	Иванова	Петровна	anna.ivanova@example.com	+79270000001	hash1
 27	Игорь	Сидоров	Александрович	igor.sidorov@example.com	+79270000002	hash2
 28	Елена	Кузнецова	Игоревна	elena.kuz@example.com	+79270000003	hash3
@@ -1096,6 +1154,7 @@ COPY core.client (id, name, surname, patronymic, email, phone_number, password_h
 31	Олег	Васильев	Николаевич	oleg.vas@example.com	+79270000006	hash6
 32	Светлана	Федорова	Евгеньевна	sveta.f@example.com	+79270000007	hash7
 33	Алексей	Попов	Владимирович	alex.popov@example.com	+79270000008	hash8
+20	Дмитрий	Ошуев	Владимирович	gomosekov@gmail.com	+79229314150	AQAAAAIAAYagAAAAEDD+Yd4XqbvPjk3eXnjP/gQPSoaCZjYiaYY4oesd/a0v7+Qu2XdZ4jt6SSe5w2JKlg==
 \.
 
 
@@ -1229,8 +1288,8 @@ COPY core.room (id, room_number, description, capacity, unit_price, hotel_id) FR
 -- Data for Name: room_booking; Type: TABLE DATA; Schema: core; Owner: postgres
 --
 
-COPY core.room_booking (id, check_in_date, check_out_date, check_in_time, check_out_time, guest_id, room_id, number_of_guests) FROM stdin;
-9	2025-04-15	2025-04-16	10:00:00	10:00:00	13	5	1
+COPY core.room_booking (id, check_in_date, check_out_date, check_in_time, check_out_time, guest_id, room_id, number_of_guests, is_confirmed, confirmation_time, created_at) FROM stdin;
+18	2025-04-20	2025-04-22	12:00:00	10:00:00	13	5	1	f	\N	2025-04-17 16:38:23.709668+03
 \.
 
 
@@ -1293,7 +1352,6 @@ COPY core.room_comfort (room_id, comfort_id) FROM stdin;
 --
 
 COPY core.room_payment (id, payment_date, payment_time, total_amount, payment_status, payment_type_id, room_booking_id) FROM stdin;
-1	2025-04-14	18:55:48.35597	2500.00	Оплачено	1	9
 \.
 
 
@@ -1311,6 +1369,13 @@ COPY core.work_schedule (id, work_date, start_time, end_time) FROM stdin;
 
 COPY public."__EFMigrationsHistory" ("MigrationId", "ProductVersion") FROM stdin;
 \.
+
+
+--
+-- Name: additional_guest_id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
+--
+
+SELECT pg_catalog.setval('core.additional_guest_id_seq', 1, false);
 
 
 --
@@ -1422,7 +1487,7 @@ SELECT pg_catalog.setval('core.payment_type_id_seq', 7, true);
 -- Name: room_booking_id_seq; Type: SEQUENCE SET; Schema: core; Owner: postgres
 --
 
-SELECT pg_catalog.setval('core.room_booking_id_seq', 14, true);
+SELECT pg_catalog.setval('core.room_booking_id_seq', 18, true);
 
 
 --
@@ -1444,6 +1509,14 @@ SELECT pg_catalog.setval('core.room_payment_id_seq', 2, true);
 --
 
 SELECT pg_catalog.setval('core.work_schedule_id_seq', 1, false);
+
+
+--
+-- Name: additional_guest additional_guest_pkey; Type: CONSTRAINT; Schema: core; Owner: postgres
+--
+
+ALTER TABLE ONLY core.additional_guest
+    ADD CONSTRAINT additional_guest_pkey PRIMARY KEY (id);
 
 
 --
@@ -1716,6 +1789,22 @@ ALTER TABLE ONLY core.work_schedule
 
 ALTER TABLE ONLY public."__EFMigrationsHistory"
     ADD CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId");
+
+
+--
+-- Name: additional_guest additional_guest_guest_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: postgres
+--
+
+ALTER TABLE ONLY core.additional_guest
+    ADD CONSTRAINT additional_guest_guest_id_fkey FOREIGN KEY (guest_id) REFERENCES core.guest(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: additional_guest additional_guest_room_booking_id_fkey; Type: FK CONSTRAINT; Schema: core; Owner: postgres
+--
+
+ALTER TABLE ONLY core.additional_guest
+    ADD CONSTRAINT additional_guest_room_booking_id_fkey FOREIGN KEY (room_booking_id) REFERENCES core.room_booking(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
