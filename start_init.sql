@@ -628,3 +628,15 @@ ADD COLUMN confirmation_time TIMESTAMP DEFAULT NULL;
 
 ALTER TABLE core.room_booking
 ADD COLUMN created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE hotel_review
+ADD room_booking_id INT NOT NULL;
+
+ALTER TABLE hotel_review
+ADD CONSTRAINT fk_hotel_review_booking
+FOREIGN KEY (room_booking_id) REFERENCES room_booking(id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+CREATE UNIQUE INDEX ux_hotel_review_booking
+ON hotel_review(room_booking_id);
