@@ -680,3 +680,8 @@ SET unit_price =
         ELSE unit_price 
     END
 WHERE unit_price = 0 OR (unit_price IS NULL);
+
+ALTER TABLE core.amenity_booking
+ADD COLUMN room_booking_id INT REFERENCES core.room_booking(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
