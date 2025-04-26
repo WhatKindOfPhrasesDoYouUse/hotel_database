@@ -687,3 +687,8 @@ ADD COLUMN room_booking_id INT REFERENCES core.room_booking(id)
     ON UPDATE CASCADE;
 
 DROP TABLE work_schedule;
+
+UPDATE employee_type SET name = 'Administrator' WHERE id = 1;
+UPDATE employee_type SET name = 'Cleaner' WHERE id = 2;
+UPDATE employee_type SET name = 'Technician' WHERE id = 3;
+UPDATE employee_type SET name = 'Reception' WHERE id = 4;
