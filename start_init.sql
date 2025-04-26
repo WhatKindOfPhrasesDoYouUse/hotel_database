@@ -685,3 +685,5 @@ ALTER TABLE core.amenity_booking
 ADD COLUMN room_booking_id INT REFERENCES core.room_booking(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE;
+
+DROP TABLE work_schedule;
