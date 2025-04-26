@@ -640,3 +640,43 @@ ON DELETE CASCADE;
 
 CREATE UNIQUE INDEX ux_hotel_review_booking
 ON hotel_review(room_booking_id);
+
+UPDATE amenity 
+SET unit_price = 
+    CASE 
+        WHEN name = 'Уборка номера' AND description = 'Ежедневная базовая уборка' THEN 200
+        WHEN name = 'Уборка номера' AND description = 'Глубокая уборка раз в три дня' THEN 250
+        WHEN name = 'Уборка номера' AND description = 'Премиальная уборка каждый день' THEN 300
+        WHEN name = 'Уборка номера' AND description = 'Полная уборка и дезинфекция' THEN 350
+        WHEN name = 'Уборка' AND description = 'Стандартная уборка' THEN 200
+        WHEN name = 'Замена полотенец' THEN 100
+        WHEN name = 'Замена полотенец и халатов' THEN 150
+        WHEN name = 'Wi-Fi' AND description = 'Бесплатный интернет в номере' THEN 150
+        WHEN name = 'Wi-Fi' AND description = 'Скоростной интернет' THEN 180
+        WHEN name = 'Wi-Fi' AND description = 'Бесплатный высокоскоростной интернет' THEN 200
+        WHEN name = 'Wi-Fi+' THEN 220
+        WHEN name = 'Доставка воды' THEN 50
+        WHEN name = 'Будильник' THEN 30
+        WHEN name = 'Телевидение' THEN 180
+        WHEN name = 'Телевизор' THEN 150
+        WHEN name = 'Мини-сейф' THEN 80
+        WHEN name = 'Замена постельного белья' THEN 120
+        WHEN name = 'Доп. подушка' THEN 40
+        WHEN name = 'Чай и кофе' THEN 70
+        WHEN name = 'Room service' THEN 250
+        WHEN name = 'Спа-набор' THEN 150
+        WHEN name = 'Персональный консьерж' THEN 300
+        WHEN name = 'Техобслуживание по требованию' THEN 220
+        WHEN name = 'Техобслуживание' THEN 200
+        WHEN name = 'ТВ-пакет премиум' THEN 400
+        WHEN name = 'Сменный халат' THEN 90
+        WHEN name = 'Чайник и чай' THEN 60
+        WHEN name = 'Уборка после животных' THEN 300
+        WHEN name = 'Чистка обуви' THEN 200
+        WHEN name = 'Прачечная' THEN 200
+        WHEN name = 'Услуги прачечной' THEN 300
+        WHEN name = 'Услуги глажки' THEN 250
+        WHEN name = 'Мини-бар' AND unit_price = 0 THEN 500
+        ELSE unit_price 
+    END
+WHERE unit_price = 0 OR (unit_price IS NULL);
