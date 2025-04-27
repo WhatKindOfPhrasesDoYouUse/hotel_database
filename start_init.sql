@@ -692,3 +692,14 @@ UPDATE employee_type SET name = 'Administrator' WHERE id = 1;
 UPDATE employee_type SET name = 'Cleaner' WHERE id = 2;
 UPDATE employee_type SET name = 'Technician' WHERE id = 3;
 UPDATE employee_type SET name = 'Reception' WHERE id = 4;
+
+ALTER TABLE amenity_review
+ADD COLUMN amenity_booking_id INT;
+
+ALTER TABLE amenity_review
+ADD CONSTRAINT fk_amenity_review_amenity_booking
+FOREIGN KEY (amenity_booking_id) REFERENCES amenity_booking(id)
+ON DELETE CASCADE;
+
+CREATE UNIQUE INDEX ux_amenity_review_amenity_booking_id
+ON amenity_review(amenity_booking_id);
