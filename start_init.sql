@@ -703,3 +703,5 @@ ON DELETE CASCADE;
 
 CREATE UNIQUE INDEX ux_amenity_review_amenity_booking_id
 ON amenity_review(amenity_booking_id);
+
+SELECT setval('core.bank_id_seq', (SELECT MAX(id) FROM core.bank));
