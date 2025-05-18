@@ -705,3 +705,32 @@ CREATE UNIQUE INDEX ux_amenity_review_amenity_booking_id
 ON amenity_review(amenity_booking_id);
 
 SELECT setval('core.bank_id_seq', (SELECT MAX(id) FROM core.bank));
+
+-- Для таблицы amenity (изменяем SET NULL на CASCADE)
+ALTER TABLE core.amenity 
+DROP CONSTRAINT amenity_room_id_fkey,
+ADD CONSTRAINT amenity_room_id_fkey 
+FOREIGN KEY (room_id) REFERENCES core.room(id) 
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Для таблицы room_booking (изменяем RESTRICT на CASCADE)
+ALTER TABLE core.room_booking 
+DROP CONSTRAINT room_booking_room_id_fkey,
+ADD CONSTRAINT room_booking_room_id_fkey 
+FOREIGN KEY (room_id) REFERENCES core.room(id) 
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Для таблицы room_comfort (уже CASCADE, можно не менять)
+-- Для amenity_booking (если есть связь с room_booking)
+ALTER TABLE core.amenity_booking 
+DROP CONSTRAINT amenity_booking_room_booking_id_fkey,
+ADD CONSTRAINT amenity_booking_room_booking_id_fkey 
+FOREIGN KEY (room_booking_id) REFERENCES core.room_booking(id) 
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+-- Для amenity_payment
+ALTER TABLE core.amenity_payment 
+DROP CONSTRAINT amenity_payment_amenity_booking_id_fkey,
+ADD CONSTRAINT amenity_payment_amenity_booking_id_fkey 
+FOREIGN KEY (amenity_booking_id) REFERENCES core.amenity_booking(id) 
+ON UPDATE CASCADE ON DELETE CASCADE;
