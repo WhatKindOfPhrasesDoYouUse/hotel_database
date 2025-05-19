@@ -734,3 +734,8 @@ DROP CONSTRAINT amenity_payment_amenity_booking_id_fkey,
 ADD CONSTRAINT amenity_payment_amenity_booking_id_fkey 
 FOREIGN KEY (amenity_booking_id) REFERENCES core.amenity_booking(id) 
 ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE core.room_payment
+DROP CONSTRAINT room_payment_room_booking_id_fkey,
+ADD CONSTRAINT room_payment_room_booking_id_fkey 
+FOREIGN KEY (room_booking_id) REFERENCES core.room_booking(id) ON DELETE CASCADE;
